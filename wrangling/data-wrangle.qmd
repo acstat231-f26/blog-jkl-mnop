@@ -19,7 +19,21 @@ library(dplyr)
 #| label: data-wrangle-code
  
 # Data import 
-alc_use_17_18 <- read_csv("../raw-data/17-18-alcohol-use.csv")
+alc_use_15_16 <- read_csv("../raw-data/15-16-alcohol-use.csv")
+dep_ep_15_16 <- read_csv("../raw-data/15-16-depressive-ep.csv")
+m_illness_15_16 <- read_csv("../raw-data/15-16-mental-illness.csv")
+
+alc_use_18_19 <- read_csv("../raw-data/18-19-alcohol-use.csv")
+dep_ep_18_19 <- read_csv("../raw-data/18-19-depressive-ep.csv")
+m_illness_18_19 <- read_csv("../raw-data/18-19-mental-illness.csv")
+
+alc_use_21_22 <- read_csv("../raw-data/21-22-alcohol-use.csv")
+dep_ep_21_22 <- read_csv("../raw-data/21-22-depressive-ep.csv")
+m_illness_21_22 <- read_csv("../raw-data/21-22-mental-illness.csv")
+
+alc_use_23_24 <- read_csv("../raw-data/23-24-alcohol-use.csv")
+dep_ep_23_24 <- read_csv("../raw-data/23-24-depressive-ep.csv")
+m_illness_23_24 <- read_csv("../raw-data/23-24-mental-illness.csv")
 
 # Data wrangling
 
