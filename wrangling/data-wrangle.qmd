@@ -1,0 +1,26 @@
+```{r}
+# Include a note at the start of each file to summarize the content and describe each person's contribution to the wrangling process in that file
+```
+
+```{r}
+#| label: setup
+#| include: false
+
+# load packages
+library(tidyverse)
+library(ggplot2)
+library(kableExtra)
+library(readxl)
+library(janitor)
+library(dplyr)
+```
+
+```{r}
+#| label: data-wrangle-code
+ 
+# Data import 
+alc_use_17_18 <- read_csv("raw-data/17-18-alcohol-use.csv")
+
+# Data wrangling
+
+# mycal <- cal_import |>
