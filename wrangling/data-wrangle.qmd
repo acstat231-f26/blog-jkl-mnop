@@ -19,8 +19,9 @@ library(dplyr)
 #| label: data-wrangle-code
  
 # Data import 
-alc_use_17_18 <- read_csv("raw-data/17-18-alcohol-use.csv")
+alc_use_17_18 <- read_csv("../raw-data/17-18-alcohol-use.csv")
 
 # Data wrangling
 
 # mycal <- cal_import |>
+```
