@@ -86,7 +86,21 @@ dataset_23_24 <- lapply(dataset_23_24, function(df) {
 list2env(c(dataset_15_16, dataset_18_19, dataset_21_22, dataset_23_24), 
          envir = .GlobalEnv)
 
+# create new dataset that joins all datasets under the same topic
+alc_use_change <- alc_use_15_16 |>
+  left_join(alc_use_18_19) |>
+  left_join(alc_use_21_22) |>
+  left_join(alc_use_23_24)
 
+dep_ep_change <- dep_ep_15_16 |>
+  left_join(dep_ep_18_19) |>
+  left_join(dep_ep_21_22) |>
+  left_join(dep_ep_23_24)
+
+m_illness_change <- m_illness_15_16 |>
+  left_join(m_illness_18_19) |>
+  left_join(m_illness_21_22) |>
+  left_join(m_illness_23_24)
 
 
 
