@@ -1,5 +1,6 @@
 ```{r}
-# Include a note at the start of each file to summarize the content and describe each person's contribution to the wrangling process in that file
+# wrangle SAMHSA data about alcohol use disorder, mental illness, and major depressive episodes from the years 2015-2016, 2018-2019, 2021-2022, 2023-2024 
+# Kylie and Jerry found data and planned wrangling steps, Leyna coded
 ```
 
 ```{r}
@@ -45,7 +46,7 @@ CI_col <- c("12 or Older 95% CI (Lower)", "12 or Older 95% CI (Upper)",
                "95% CI (Lower)", "95% CI (Upper)", "18+ 95% CI (Lower)",
                "18+ 95% CI (Upper)", "26+ 95% CI (Lower)", "26+ 95% CI (Upper)")
 
-dataset_list <- lapply(dataset_list, function(df) {
+dataset_list1 <- lapply(dataset_list, function(df) {
   # go through each dataset
   # remove "Order" column & keep "State" 
   df |> select(-"Order", 
@@ -54,7 +55,39 @@ dataset_list <- lapply(dataset_list, function(df) {
                -any_of(trash_col))
 })
 
-list2env(dataset_list, envir = .GlobalEnv)
+# group datasets by year into lists
+dataset_15_16 <- dataset_list1[1:3]
+dataset_18_19 <- dataset_list1[4:6]
+dataset_21_22 <- dataset_list1[7:9]
+dataset_23_24 <- dataset_list1[10:12]
+
+# add corresponding year to the end of variables in each dataset
+# except for the state variable
+dataset_15_16 <- lapply(dataset_15_16, function(df) {
+  df |>
+    rename_with(~ paste0(., " 15_16"), -"State")
+})
+
+dataset_18_19 <- lapply(dataset_18_19, function(df) {
+  df |>
+    rename_with(~ paste0(., " 18_19"), -"State")
+})
+
+dataset_21_22 <- lapply(dataset_21_22, function(df) {
+  df |>
+    rename_with(~ paste0(., " 21_22"), -"State")
+})
+
+dataset_23_24 <- lapply(dataset_23_24, function(df) {
+  df |>
+    rename_with(~ paste0(., " 23_24"), -"State")
+})
+
+list2env(c(dataset_15_16, dataset_18_19, dataset_21_22, dataset_23_24), 
+         envir = .GlobalEnv)
+
+
+
 
 
 # mycal <- cal_import |>
