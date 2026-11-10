@@ -4,7 +4,6 @@
 
 ```{r}
 #| label: setup
-#| include: false
 
 # load packages
 library(tidyverse)
@@ -34,7 +33,29 @@ dataset_list <- list(
   dep_ep_23_24 = read_csv("../raw-data/23-24-depressive-ep.csv", skip = 6),
   m_illness_23_24 = read_csv("../raw-data/23-24-mental-illness.csv", skip = 5)
   )
+
 # Data wrangling
+
+# vector of all CI columns to be deleted
+CI_col <- c("12 or Older 95% CI (Lower)", "12 or Older 95% CI (Upper)",
+               "12-17 95% CI (Lower)", "12-17 95% CI (Upper)", 
+               "18-25 95% CI (Lower)", "18-25 95% CI (Upper)",
+               "26 or Older 95% CI (Lower)", "26 or Older 95% CI (Upper)",
+               "18 or Older 95% CI (Lower)", "18 or Older 95% CI (Upper)",
+               "95% CI (Lower)", "95% CI (Upper)", "18+ 95% CI (Lower)",
+               "18+ 95% CI (Upper)", "26+ 95% CI (Lower)", "26+ 95% CI (Upper)")
+
+dataset_list <- lapply(dataset_list, function(df) {
+  # go through each dataset
+  # remove "Order" column & keep "State" 
+  df |> select(-"Order", 
+               "State", 
+               # remove any of the columns that match the ones listed in CI_col
+               -any_of(trash_col))
+})
+
+list2env(dataset_list, envir = .GlobalEnv)
+
 
 # mycal <- cal_import |>
 ```
