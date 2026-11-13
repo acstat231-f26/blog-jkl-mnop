@@ -18,40 +18,43 @@ library(dplyr)
 # Data import, `skip` to take out the initial lines that aren't actual data
 
 dataset_list <- list(
-  alc_use_15_16 = read_csv("../raw-data/15-16-alcohol-use.csv", skip = 5),
+  sud_15_16 = read_csv("../raw-data/15-16-substance-use.csv", skip = 7),
   dep_ep_15_16 = read_csv("../raw-data/15-16-depressive-ep.csv", skip = 6),
   m_illness_15_16 = read_csv("../raw-data/15-16-mental-illness.csv", skip = 5),
   
-  alc_use_18_19 = read_csv("../raw-data/18-19-alcohol-use.csv", skip = 5),
+  sud_18_19 = read_csv("../raw-data/18-19-substance-use.csv", skip = 6),
   dep_ep_18_19 = read_csv("../raw-data/18-19-depressive-ep.csv", skip = 6),
   m_illness_18_19 = read_csv("../raw-data/18-19-mental-illness.csv", skip = 5),
   
-  alc_use_21_22 = read_csv("../raw-data/21-22-alcohol-use.csv", skip = 5),
+  sud_21_22 = read_csv("../raw-data/21-22-substance-use.csv", skip = 6),
   dep_ep_21_22 = read_csv("../raw-data/21-22-depressive-ep.csv", skip = 6),
   m_illness_21_22 = read_csv("../raw-data/21-22-mental-illness.csv", skip = 5),
   
-  alc_use_23_24 = read_csv("../raw-data/23-24-alcohol-use.csv", skip = 5),
+  sud_23_24 = read_csv("../raw-data/23-24-substance-use.csv", skip = 6),
   dep_ep_23_24 = read_csv("../raw-data/23-24-depressive-ep.csv", skip = 6),
   m_illness_23_24 = read_csv("../raw-data/23-24-mental-illness.csv", skip = 5)
   )
 
 # Data wrangling
 
-# vector of all CI columns to be deleted
-CI_col <- c("12 or Older 95% CI (Lower)", "12 or Older 95% CI (Upper)",
-               "12-17 95% CI (Lower)", "12-17 95% CI (Upper)", 
+# vector of all unneeded columns to be deleted
+trash_col <- c("12 or Older 95% CI (Lower)", "12 or Older 95% CI (Upper)",
+               "12-17 95% CI (Lower)", "12-17 95% CI (Upper)",
                "18-25 95% CI (Lower)", "18-25 95% CI (Upper)",
                "26 or Older 95% CI (Lower)", "26 or Older 95% CI (Upper)",
                "18 or Older 95% CI (Lower)", "18 or Older 95% CI (Upper)",
                "95% CI (Lower)", "95% CI (Upper)", "18+ 95% CI (Lower)",
-               "18+ 95% CI (Upper)", "26+ 95% CI (Lower)", "26+ 95% CI (Upper)")
+               "18+ 95% CI (Upper)", "26+ 95% CI (Lower)", "26+ 95% CI (Upper)",
+               "18 or Older Estimate", "18+ Estimate", "12-17 Estimate",
+               "12 or Older Estimate", "12+ Estimate", "12+ 95% CI (Upper)",
+               "12+ 95% CI (Lower)")
 
 dataset_list1 <- lapply(dataset_list, function(df) {
   # go through each dataset
   # remove "Order" column & keep "State" 
   df |> select(-"Order", 
                "State", 
-               # remove any of the columns that match the ones listed in CI_col
+            # remove any of the columns that match the ones listed in trash_col
                -any_of(trash_col))
 })
 
@@ -87,10 +90,10 @@ list2env(c(dataset_15_16, dataset_18_19, dataset_21_22, dataset_23_24),
          envir = .GlobalEnv)
 
 # create new dataset that joins all datasets under the same topic
-alc_use_change <- alc_use_15_16 |>
-  left_join(alc_use_18_19) |>
-  left_join(alc_use_21_22) |>
-  left_join(alc_use_23_24)
+sud_change <- sud_15_16 |>
+  left_join(sud_18_19) |>
+  left_join(sud_21_22) |>
+  left_join(sud_23_24)
 
 dep_ep_change <- dep_ep_15_16 |>
   left_join(dep_ep_18_19) |>
@@ -101,8 +104,8 @@ m_illness_change <- m_illness_15_16 |>
   left_join(m_illness_18_19) |>
   left_join(m_illness_21_22) |>
   left_join(m_illness_23_24)
+# keep 18-25 and 26+
+# calculate percent changes
 
 
-
-# mycal <- cal_import |>
 ```
