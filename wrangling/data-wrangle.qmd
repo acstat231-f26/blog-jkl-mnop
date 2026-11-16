@@ -108,34 +108,46 @@ m_illness_all_yrs <- m_illness_15_16 |>
   left_join(m_illness_23_24)
 
 # clean up variable names
-# remove plus signs and replace the "x" that appears in front of all variables 
-# with "age"
+# replace "+", "_or_older", and "_plus" with "plus"
+# replace "x" that appears in front of all variables with "age"
+# remove "%" in data values and convert to numeric data type
 
 sud_all_yrs <- sud_all_yrs |>
   rename_with(~ str_replace(.x, "\\+", "plus")) |> 
   rename_with(~ str_replace(.x, "_or_older", "plus")) |>
   rename_with(~ str_replace(.x, "_plus", "plus")) |> 
   clean_names() |>
-  rename_with(~ str_replace(.x, "x", "age")) 
+  rename_with(~ str_replace(.x, "x", "age")) |>
+  mutate(across(2:9, ~ as.numeric(gsub("%", "", .x))))
 
 dep_ep_all_yrs <- dep_ep_all_yrs |>
   rename_with(~ str_replace(.x, "\\+", "plus")) |> 
   rename_with(~ str_replace(.x, "_or_older", "plus")) |> 
   rename_with(~ str_replace(.x, "_plus", "plus")) |>   
   clean_names() |>
-  rename_with(~ str_replace(.x, "x", "age"))
+  rename_with(~ str_replace(.x, "x", "age")) |>
+  mutate(across(2:9, ~ as.numeric(gsub("%", "", .x))))
 
 m_illness_all_yrs <- m_illness_all_yrs |>
   rename_with(~ str_replace(.x, "\\+", "plus")) |> 
   rename_with(~ str_replace(.x, "_or_older", "plus")) |> 
   rename_with(~ str_replace(.x, "_plus", "plus")) |> 
   clean_names() |>
-  rename_with(~ str_replace(.x, "x", "age"))
+  rename_with(~ str_replace(.x, "x", "age")) |>
+  mutate(across(2:9, ~ as.numeric(gsub("%", "", .x))))
 
 sud_change <- sud_all_yrs |>
   mutate(
-    pre_age18_25 = age18_25_estimate_18_19 - age18_25_estimate_15_16,
-    pre_age26plus=  age26plus_estimate_18_19 - age26plus_estimate_15_16
-    )
+    precovid_age18_25 = age18_25_estimate_18_19 - age18_25_estimate_15_16,
+    precovid_age26plus=  age26plus_estimate_18_19 - age26plus_estimate_15_16,
+    covid_age18_25 = age18_25_estimate_21_22 - age18_25_estimate_18_19,
+    covid_age26plus=  age26plus_estimate_21_22 - age18_25_estimate_18_19,
+    postcovid_age18_25 = age18_25_estimate_23_24 - age18_25_estimate_21_22,
+    postcovid_age26plus=  age26plus_estimate_23_24 - age26plus_estimate_21_22,
+    ) |>
+  select(precovid_age18_25, precovid_age26plus, covid_age18_25, covid_age26plus,
+         postcovid_age18_25, postcovid_age26plus)
+
+
 
 ```
