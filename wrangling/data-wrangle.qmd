@@ -18,7 +18,7 @@ library(dplyr)
 # Data import, `skip` to take out the initial lines that aren't actual data
 
 dataset_list <- list(
-  sud_15_16 = read_csv("../raw-data/15-16-substance-use.csv", skip = 7),
+  sud_15_16 = read_csv("../raw-data/15-16-substance-use.csv", skip = 6),
   dep_ep_15_16 = read_csv("../raw-data/15-16-depressive-ep.csv", skip = 6),
   m_illness_15_16 = read_csv("../raw-data/15-16-mental-illness.csv", skip = 5),
   
@@ -107,20 +107,35 @@ m_illness_all_yrs <- m_illness_15_16 |>
   left_join(m_illness_21_22) |>
   left_join(m_illness_23_24)
 
+# clean up variable names
+# remove plus signs and replace the "x" that appears in front of all variables 
+# with "age"
 
 sud_all_yrs <- sud_all_yrs |>
-  rename_with(~ str_replace(.x, "\\+", "_or_older")) |>
+  rename_with(~ str_replace(.x, "\\+", "plus")) |> 
+  rename_with(~ str_replace(.x, "_or_older", "plus")) |>
+  rename_with(~ str_replace(.x, "_plus", "plus")) |> 
   clean_names() |>
-  rename_with(~ str_replace(.x, "x", "age"))
+  rename_with(~ str_replace(.x, "x", "age")) 
 
 dep_ep_all_yrs <- dep_ep_all_yrs |>
-  rename_with(~ str_replace(.x, "\\+", "_or_older")) |>
+  rename_with(~ str_replace(.x, "\\+", "plus")) |> 
+  rename_with(~ str_replace(.x, "_or_older", "plus")) |> 
+  rename_with(~ str_replace(.x, "_plus", "plus")) |>   
   clean_names() |>
   rename_with(~ str_replace(.x, "x", "age"))
 
 m_illness_all_yrs <- m_illness_all_yrs |>
-  rename_with(~ str_replace(.x, "\\+", "_or_older")) |>
+  rename_with(~ str_replace(.x, "\\+", "plus")) |> 
+  rename_with(~ str_replace(.x, "_or_older", "plus")) |> 
+  rename_with(~ str_replace(.x, "_plus", "plus")) |> 
   clean_names() |>
   rename_with(~ str_replace(.x, "x", "age"))
+
+sud_change <- sud_all_yrs |>
+  mutate(
+    pre_age18_25 = age18_25_estimate_18_19 - age18_25_estimate_15_16,
+    pre_age26plus=  age26plus_estimate_18_19 - age26plus_estimate_15_16
+    )
 
 ```
