@@ -66,24 +66,25 @@ dataset_23_24 <- dataset_list1[10:12]
 
 # add corresponding year to the end of variables in each dataset
 # except for the state variable
+dataset_15_16 <- map(dataset_15_16, ~ rename(.x, ))
 dataset_15_16 <- lapply(dataset_15_16, function(df) {
   df |>
-    rename_with(~ paste0(., " 15_16"), -"State")
+    rename_with(~ paste0(., " 15_16"), -"State") 
 })
 
 dataset_18_19 <- lapply(dataset_18_19, function(df) {
   df |>
-    rename_with(~ paste0(., " 18_19"), -"State")
+    rename_with(~ paste0(., " 18_19"), -"State") 
 })
 
 dataset_21_22 <- lapply(dataset_21_22, function(df) {
   df |>
-    rename_with(~ paste0(., " 21_22"), -"State")
+    rename_with(~ paste0(., " 21_22"), -"State") 
 })
 
 dataset_23_24 <- lapply(dataset_23_24, function(df) {
   df |>
-    rename_with(~ paste0(., " 23_24"), -"State")
+    rename_with(~ paste0(., " 23_24"), -"State") 
 })
 
 list2env(c(dataset_15_16, dataset_18_19, dataset_21_22, dataset_23_24), 
