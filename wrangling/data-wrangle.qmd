@@ -35,6 +35,7 @@ dataset_list <- list(
   m_illness_23_24 = read_csv("../raw-data/23-24-mental-illness.csv", skip = 5)
   )
 
+
 # Data wrangling
 
 # vector of all unneeded columns to be deleted
@@ -91,22 +92,35 @@ list2env(c(dataset_15_16, dataset_18_19, dataset_21_22, dataset_23_24),
          envir = .GlobalEnv)
 
 # create new dataset that joins all datasets under the same topic
-sud_change <- sud_15_16 |>
+sud_all_yrs <- sud_15_16 |>
   left_join(sud_18_19) |>
   left_join(sud_21_22) |>
   left_join(sud_23_24)
 
-dep_ep_change <- dep_ep_15_16 |>
+dep_ep_all_yrs <- dep_ep_15_16 |>
   left_join(dep_ep_18_19) |>
   left_join(dep_ep_21_22) |>
   left_join(dep_ep_23_24)
 
-m_illness_change <- m_illness_15_16 |>
+m_illness_all_yrs <- m_illness_15_16 |>
   left_join(m_illness_18_19) |>
   left_join(m_illness_21_22) |>
   left_join(m_illness_23_24)
-# keep 18-25 and 26+
-# calculate percent changes
 
+
+sud_all_yrs <- sud_all_yrs |>
+  rename_with(~ str_replace(.x, "\\+", "_or_older")) |>
+  clean_names() |>
+  rename_with(~ str_replace(.x, "x", "age"))
+
+dep_ep_all_yrs <- dep_ep_all_yrs |>
+  rename_with(~ str_replace(.x, "\\+", "_or_older")) |>
+  clean_names() |>
+  rename_with(~ str_replace(.x, "x", "age"))
+
+m_illness_all_yrs <- m_illness_all_yrs |>
+  rename_with(~ str_replace(.x, "\\+", "_or_older")) |>
+  clean_names() |>
+  rename_with(~ str_replace(.x, "x", "age"))
 
 ```
