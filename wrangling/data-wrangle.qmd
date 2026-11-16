@@ -173,6 +173,8 @@ m_illness_change <- m_illness_all_yrs |>
   select(precovid_age18_25, precovid_age26plus, covid_age18_25, covid_age26plus,
          postcovid_age18_25, postcovid_age26plus)
 
-
+saveRDS(sud_change, file = "../data/sud_change.rds")
+saveRDS(dep_ep_change, file = "../data/dep_ep.rds")
+saveRDS(m_illness_change, file = "../data/m_illness.rds")
 
 ```
