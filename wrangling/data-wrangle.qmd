@@ -146,8 +146,8 @@ sud_change <- sud_all_yrs |>
     postcovid_age18_25 = age18_25_estimate_23_24 - age18_25_estimate_21_22,
     postcovid_age26plus=  age26plus_estimate_23_24 - age26plus_estimate_21_22,
     ) |>
-  select(precovid_age18_25, precovid_age26plus, covid_age18_25, covid_age26plus,
-         postcovid_age18_25, postcovid_age26plus)
+  select(state, precovid_age18_25, precovid_age26plus, covid_age18_25,
+         covid_age26plus,postcovid_age18_25, postcovid_age26plus)
 
 dep_ep_change <- dep_ep_all_yrs |>
   mutate(
@@ -158,8 +158,8 @@ dep_ep_change <- dep_ep_all_yrs |>
     postcovid_age18_25 = age18_25_estimate_23_24 - age18_25_estimate_21_22,
     postcovid_age26plus=  age26plus_estimate_23_24 - age26plus_estimate_21_22,
     ) |>
-  select(precovid_age18_25, precovid_age26plus, covid_age18_25, covid_age26plus,
-         postcovid_age18_25, postcovid_age26plus)
+  select(state, precovid_age18_25, precovid_age26plus, covid_age18_25,
+         covid_age26plus,postcovid_age18_25, postcovid_age26plus)
 
 m_illness_change <- m_illness_all_yrs |>
   mutate(
@@ -170,8 +170,8 @@ m_illness_change <- m_illness_all_yrs |>
     postcovid_age18_25 = age18_25_estimate_23_24 - age18_25_estimate_21_22,
     postcovid_age26plus=  age26plus_estimate_23_24 - age26plus_estimate_21_22,
     ) |>
-  select(precovid_age18_25, precovid_age26plus, covid_age18_25, covid_age26plus,
-         postcovid_age18_25, postcovid_age26plus)
+  select(state, precovid_age18_25, precovid_age26plus, covid_age18_25,
+         covid_age26plus,postcovid_age18_25, postcovid_age26plus)
 
 saveRDS(sud_change, file = "../data/sud_change.rds")
 saveRDS(dep_ep_change, file = "../data/dep_ep.rds")
