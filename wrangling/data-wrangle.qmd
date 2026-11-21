@@ -115,25 +115,25 @@ m_illness_all_yrs <- m_illness_15_16 |>
 
 sud_all_yrs <- sud_all_yrs |>
   rename_with(~ str_replace(.x, "\\+", "plus")) |> 
-  rename_with(~ str_replace(.x, "_or_older", "plus")) |>
   rename_with(~ str_replace(.x, "_plus", "plus")) |> 
   clean_names() |>
+  rename_with(~ str_replace(.x, "_or_older", "plus")) |>
   rename_with(~ str_replace(.x, "x", "age")) |>
   mutate(across(2:9, ~ as.numeric(gsub("%", "", .x))))
 
 dep_ep_all_yrs <- dep_ep_all_yrs |>
   rename_with(~ str_replace(.x, "\\+", "plus")) |> 
-  rename_with(~ str_replace(.x, "_or_older", "plus")) |> 
-  rename_with(~ str_replace(.x, "_plus", "plus")) |>   
+  rename_with(~ str_replace(.x, "_plus", "plus")) |> 
   clean_names() |>
+  rename_with(~ str_replace(.x, "_or_older", "plus")) |>
   rename_with(~ str_replace(.x, "x", "age")) |>
   mutate(across(2:9, ~ as.numeric(gsub("%", "", .x))))
 
 m_illness_all_yrs <- m_illness_all_yrs |>
   rename_with(~ str_replace(.x, "\\+", "plus")) |> 
-  rename_with(~ str_replace(.x, "_or_older", "plus")) |> 
   rename_with(~ str_replace(.x, "_plus", "plus")) |> 
   clean_names() |>
+  rename_with(~ str_replace(.x, "_or_older", "plus")) |>
   rename_with(~ str_replace(.x, "x", "age")) |>
   mutate(across(2:9, ~ as.numeric(gsub("%", "", .x))))
 
