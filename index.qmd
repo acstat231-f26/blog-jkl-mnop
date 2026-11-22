@@ -245,3 +245,17 @@ ggplot(mtcars, aes(hp, mpg)) +
   geom_point()
 ```
 
+```{r}
+dep_ep_import <- readRDS("data/dep_ep.rds")
+m_illness_import <- readRDS("data/m_illness.rds")
+sud_import <- readRDS("data/sud.rds")
+
+dep_ep_import <- dep_ep_import |>
+  filter(state == "Total U.S.")
+
+dep_ep_import$year_interval <- factor(dep_ep_import$year_interval, levels = c("precovid", "covid", "postcovid"))
+
+ggplot(dep_ep_import, aes(x = year_interval, y = percent_change)) +
+  geom_point()
+```
+

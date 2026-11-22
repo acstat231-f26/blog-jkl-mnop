@@ -145,7 +145,7 @@ sud_change <- sud_all_yrs |>
     covid_age26plus=  age26plus_estimate_21_22 - age18_25_estimate_18_19,
     postcovid_age18_25 = age18_25_estimate_23_24 - age18_25_estimate_21_22,
     postcovid_age26plus=  age26plus_estimate_23_24 - age26plus_estimate_21_22,
-    ) |>
+  ) |>
   select(state, precovid_age18_25, precovid_age26plus, covid_age18_25,
          covid_age26plus,postcovid_age18_25, postcovid_age26plus)
 
@@ -157,7 +157,7 @@ dep_ep_change <- dep_ep_all_yrs |>
     covid_age26plus=  age26plus_estimate_21_22 - age18_25_estimate_18_19,
     postcovid_age18_25 = age18_25_estimate_23_24 - age18_25_estimate_21_22,
     postcovid_age26plus=  age26plus_estimate_23_24 - age26plus_estimate_21_22,
-    ) |>
+  ) |>
   select(state, precovid_age18_25, precovid_age26plus, covid_age18_25,
          covid_age26plus,postcovid_age18_25, postcovid_age26plus)
 
@@ -169,12 +169,66 @@ m_illness_change <- m_illness_all_yrs |>
     covid_age26plus=  age26plus_estimate_21_22 - age18_25_estimate_18_19,
     postcovid_age18_25 = age18_25_estimate_23_24 - age18_25_estimate_21_22,
     postcovid_age26plus=  age26plus_estimate_23_24 - age26plus_estimate_21_22,
-    ) |>
+  ) |>
   select(state, precovid_age18_25, precovid_age26plus, covid_age18_25,
          covid_age26plus,postcovid_age18_25, postcovid_age26plus)
 
-saveRDS(sud_change, file = "../data/sud_change.rds")
-saveRDS(dep_ep_change, file = "../data/dep_ep.rds")
-saveRDS(m_illness_change, file = "../data/m_illness.rds")
+sud_change_long <- sud_change |>
+  pivot_longer(
+    cols = 2:7,
+    names_to = "interval_age_group",
+    values_to = "percent_change"
+  ) |>
+  mutate(
+    year_interval = case_when(
+      (str_detect(interval_age_group, "precovid") == TRUE) ~ "precovid",
+      (str_detect(interval_age_group, "postcovid") == TRUE) ~ "postcovid",
+      .default = "covid"
+    ),
+    age = case_when(
+      (str_detect(interval_age_group, "age18_25") == TRUE) ~ "18-25",
+      (str_detect(interval_age_group, "age26plus") == TRUE) ~ "26+"
+    )
+  )
+
+dep_ep_change_long <- dep_ep_change |>
+  pivot_longer(
+    cols = 2:7,
+    names_to = "interval_age_group",
+    values_to = "percent_change"
+  ) |>
+  mutate(
+    year_interval = case_when(
+      (str_detect(interval_age_group, "precovid") == TRUE) ~ "precovid",
+      (str_detect(interval_age_group, "postcovid") == TRUE) ~ "postcovid",
+      .default = "covid"
+    ),
+    age = case_when(
+      (str_detect(interval_age_group, "age18_25") == TRUE) ~ "18-25",
+      (str_detect(interval_age_group, "age26plus") == TRUE) ~ "26+"
+    )
+  )
+
+m_illness_change_long <- m_illness_change |>
+  pivot_longer(
+    cols = 2:7,
+    names_to = "interval_age_group",
+    values_to = "percent_change"
+  ) |>
+  mutate(
+    year_interval = case_when(
+      (str_detect(interval_age_group, "precovid") == TRUE) ~ "precovid",
+      (str_detect(interval_age_group, "postcovid") == TRUE) ~ "postcovid",
+      .default = "covid"
+    ),
+    age = case_when(
+      (str_detect(interval_age_group, "age18_25") == TRUE) ~ "18-25",
+      (str_detect(interval_age_group, "age26plus") == TRUE) ~ "26+"
+    )
+  )
+
+saveRDS(sud_change_long, file = "../data/sud.rds")
+saveRDS(dep_ep_change_long, file = "../data/dep_ep.rds")
+saveRDS(m_illness_change_long, file = "../data/m_illness.rds")
 
 ```
