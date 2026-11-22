@@ -5,7 +5,7 @@ author:
 - "Jerry Zhu"
 - "Kylie Park-Allas"
 - "Leyna Tran"
-abstract: "A brief abstract summarizing your project is required here. This abstract, along with the first image or figure in your blog, will be used as a preview to your blog on the course's landing page for all the blogs."
+abstract: "This project is illustrating the differences in multiple mental health sectors before, during, and after the COVID-19 Pandemic. We chose these symptoms to investigate the impact that the pandemic had on the American population"
 ---
 
 ```{r}
