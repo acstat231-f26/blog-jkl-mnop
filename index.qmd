@@ -265,7 +265,7 @@ pc_map |>
   facet_wrap(~ age) +
   theme_void() +
   labs(fill = "Percent Change",
-       title = "Percent Change by State and Age Group, Before Covid Pandemic")
+       title = "Percent Change by State and Age Group for Depression, Before Covid Pandemic")
 
 pc_map |>
   filter(year_interval == "covid") |>         # pick "precovid", "covid", or "postcovid"
@@ -277,7 +277,7 @@ pc_map |>
   facet_wrap(~ age) +
   theme_void() +
   labs(fill = "Percent Change",
-       title = "Percent Change by State and Age Group, During Covid Pandemic")
+       title = "Percent Change by State and Age Group for Depression, During Covid Pandemic")
 
 
 pc_map |>
@@ -290,9 +290,12 @@ pc_map |>
   facet_wrap(~ age) +
   theme_void() +
   labs(fill = "Percent Change",
-       title = "Percent Change by State and Age Group, After Covid Pandemic")
+       title = "Percent Change by State and Age Group for Depression, After Covid Pandemic")
 
 # all of these geographic illustrations are for depression inventory import 
+
+
+
 
 
 
