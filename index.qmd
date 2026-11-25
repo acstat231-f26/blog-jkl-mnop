@@ -252,8 +252,20 @@ state_map <- maps::map("state", plot = FALSE, fill = TRUE) |>
   mutate(ID = str_remove(ID, ":.*"))     # "michigan:north" -> "michigan"
 
 pc_map <- state_map |>
-  left_join(pc_all, by = "ID")           # use pc_one or pc_wide if you chose A or C
+  left_join(pc_all, by = "ID")           
 
+
+pc_map |>
+  filter(year_interval == "precovid") |>         # pick "precovid", "covid", or "postcovid"
+  ggplot() +
+  geom_sf(aes(fill = percent_change), color = "white", linewidth = 0.1) +
+  scale_fill_gradient2(low = "steelblue", mid = "white", high = "firebrick",
+                       midpoint = 0,
+                       labels = scales::label_number(suffix = "%")) +
+  facet_wrap(~ age) +
+  theme_void() +
+  labs(fill = "Percent Change",
+       title = "Percent Change by State and Age Group, Before Covid Pandemic")
 
 pc_map |>
   filter(year_interval == "covid") |>         # pick "precovid", "covid", or "postcovid"
@@ -266,6 +278,21 @@ pc_map |>
   theme_void() +
   labs(fill = "Percent Change",
        title = "Percent Change by State and Age Group, During Covid Pandemic")
+
+
+pc_map |>
+  filter(year_interval == "postcovid") |>         # pick "precovid", "covid", or "postcovid"
+  ggplot() +
+  geom_sf(aes(fill = percent_change), color = "white", linewidth = 0.1) +
+  scale_fill_gradient2(low = "steelblue", mid = "white", high = "firebrick",
+                       midpoint = 0,
+                       labels = scales::label_number(suffix = "%")) +
+  facet_wrap(~ age) +
+  theme_void() +
+  labs(fill = "Percent Change",
+       title = "Percent Change by State and Age Group, After Covid Pandemic")
+
+# all of these geographic illustrations are for depression inventory import 
 
 
 
