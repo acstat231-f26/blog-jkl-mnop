@@ -294,7 +294,7 @@ pc_map |>
 
 # all of these geographic illustrations are for depression inventory import 
 
-
+glimpse(m_illness_import)
 
 
 
