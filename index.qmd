@@ -297,6 +297,24 @@ pc_map |>
 glimpse(m_illness_import)
 
 
+states_df <- m_illness_import %>%
+  filter(!state %in% c("Total U.S.", "Northeast", "Midwest", "South", "West"))
+
+make_map <- function(period, age_group) {
+  plot_usmap(data = filter(states_df, year_interval == period, age == age_group),
+             values = "percent_change", color = "white") +
+    scale_fill_gradient2(low = "red", mid = "white", high = "blue",
+                         midpoint = 0, name = "% change") +
+    labs(title = paste("Percent change:", period, "| Age", age_group))
+}
+
+make_map("precovid", "18-25")
+make_map("precovid", "26+")
+make_map("covid", "18-25")
+make_map("covid", "26+")
+make_map("postcovid", "18-25")
+make_map("postcovid", "26+")
+
 
 
 
