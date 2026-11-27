@@ -23,6 +23,9 @@ library(mapproj)
 library(maps)
 library(mdsr)
 library(sf)
+library(usmap)
+library(tidyr)
+library(dplyr)
 ```
 
 # Getting started
@@ -221,84 +224,74 @@ Two examples in @tbl-layout and @fig-layout below are borrowed and slightly modi
 #| layout-ncol: 2
 
 
-map(
-  "state", projection = "lambert", 
-  parameters = c(lat0 = 20, lat1 = 50), wrap = TRUE
-)
+dep_states <- dep_ep_import %>%
+  filter(!state %in% c("Total U.S.", "Northeast", "Midwest", "South", "West"))
 
+# Put periods in time order
+dep_states$year_interval <- factor(dep_states$year_interval,
+                                   levels = c("precovid", "covid", "postcovid"))
 
-dep_ep_import |> distinct(state) |> print(n = 60)
+# All six maps in one figure
+plot_usmap(data = dep_states, values = "percent_change", color = "white") +
+  scale_fill_gradient2(low = "red", mid = "white", high = "blue",
+                       midpoint = 0, name = "% change") +
+  facet_grid(age ~ year_interval) +
+  labs(title = "Depressive Episodes: Percent Change by State, Period, and Age Group")
+#depressive episode, percent change 
 
-pc_states <- dep_ep_import |>
-  filter(!state %in% c("Northeast", "Midwest", "South", "West")) |>
-  mutate(ID = str_to_lower(state))
-#removing Northeast, Midwest, South, and West to focus on the individual states 
+states_df <- m_illness_import %>%
+  filter(!state %in% c("Total U.S.", "Northeast", "Midwest", "South", "West"))
 
-pc_one <- pc_states |>
-  filter(year_interval == "covid", age == "18-25")
+# Put periods in time order
+states_df$year_interval <- factor(states_df$year_interval,
+                                  levels = c("precovid", "covid", "postcovid"))
 
-pc_wide <- pc_states |>
-  pivot_wider(id_cols = c(state, ID),
-              names_from = interval_age_group,
-              values_from = percent_change)
-#utilizing the pivot wide to visualize the table differently 
+# All six maps in one figure
+plot_usmap(data = states_df, values = "percent_change", color = "white") +
+  scale_fill_gradient2(low = "red", mid = "white", high = "blue",
+                       midpoint = 0, name = "% change") +
+  facet_grid(age ~ year_interval) +
+  labs(title = "Percent Change by State, Period, and Age Group")
+#mental illness, percent change 
 
-pc_all <- pc_states |>
-  mutate(year_interval = factor(year_interval,
-                                levels = c("precovid", "covid", "postcovid")))
+sud_states <- sud_import %>%
+  filter(!state %in% c("Total U.S.", "Northeast", "Midwest", "South", "West"))
 
-state_map <- maps::map("state", plot = FALSE, fill = TRUE) |>
-  st_as_sf() |>
-  mutate(ID = str_remove(ID, ":.*"))     # "michigan:north" -> "michigan"
+# Put periods in time order
+sud_states$year_interval <- factor(sud_states$year_interval,
+                                   levels = c("precovid", "covid", "postcovid"))
 
-pc_map <- state_map |>
-  left_join(pc_all, by = "ID")           
+# All six maps in one figure
+plot_usmap(data = sud_states, values = "percent_change", color = "white") +
+  scale_fill_gradient2(low = "red", mid = "white", high = "blue",
+                       midpoint = 0, name = "% change") +
+  facet_grid(age ~ year_interval) +
+  labs(title = "Substance Use Disorder: Percent Change by State, Period, and Age Group")
 
+#SUD mapping 
 
-pc_map |>
-  filter(year_interval == "precovid") |>         # pick "precovid", "covid", or "postcovid"
-  ggplot() +
-  geom_sf(aes(fill = percent_change), color = "white", linewidth = 0.1) +
-  scale_fill_gradient2(low = "steelblue", mid = "white", high = "firebrick",
-                       midpoint = 0,
-                       labels = scales::label_number(suffix = "%")) +
-  facet_wrap(~ age) +
-  theme_void() +
-  labs(fill = "Percent Change",
-       title = "Percent Change by State and Age Group for Depression, Before Covid Pandemic")
+all_data <- bind_rows(
+  "Mental Illness"     = m_illness_import,
+  "Depressive Episode" = dep_ep_import,
+  "SUD"                = sud_import,
+  .id = "measure"
+) %>%
+  filter(!state %in% c("Total U.S.", "Northeast", "Midwest", "South", "West"))
 
-pc_map |>
-  filter(year_interval == "covid") |>         # pick "precovid", "covid", or "postcovid"
-  ggplot() +
-  geom_sf(aes(fill = percent_change), color = "white", linewidth = 0.1) +
-  scale_fill_gradient2(low = "steelblue", mid = "white", high = "firebrick",
-                       midpoint = 0,
-                       labels = scales::label_number(suffix = "%")) +
-  facet_wrap(~ age) +
-  theme_void() +
-  labs(fill = "Percent Change",
-       title = "Percent Change by State and Age Group for Depression, During Covid Pandemic")
+# Difference (18-25 minus 26+) per state and period, then the mean
+diff_table <- all_data %>%
+  select(measure, state, year_interval, age, percent_change) %>%
+  pivot_wider(names_from = age, values_from = percent_change) %>%
+  mutate(diff = `18-25` - `26+`) %>%
+  select(measure, state, year_interval, diff) %>%
+  pivot_wider(names_from = year_interval, values_from = diff) %>%
+  select(measure, state, precovid, covid, postcovid) %>%
+  mutate(mean_diff = rowMeans(across(c(precovid, covid, postcovid)), na.rm = TRUE)) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 2)))
 
+View(diff_table)
 
-pc_map |>
-  filter(year_interval == "postcovid") |>         # pick "precovid", "covid", or "postcovid"
-  ggplot() +
-  geom_sf(aes(fill = percent_change), color = "white", linewidth = 0.1) +
-  scale_fill_gradient2(low = "steelblue", mid = "white", high = "firebrick",
-                       midpoint = 0,
-                       labels = scales::label_number(suffix = "%")) +
-  facet_wrap(~ age) +
-  theme_void() +
-  labs(fill = "Percent Change",
-       title = "Percent Change by State and Age Group for Depression, After Covid Pandemic")
-
-# all of these geographic illustrations are for depression inventory import 
-
-glimpse(m_illness_import)
-
-
-
-
+knitr::kable(diff_table)
 
 
 
